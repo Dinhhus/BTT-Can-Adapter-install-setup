@@ -1,15 +1,19 @@
+
 # install requirements
+
 sudo apt-get install cmake gcc-arm-none-eabi  
 
 # clone repo  
+
 git clone https://github.com/LeVan102/CandleLight_FW.git  
 cd CandleLight_FW  
 
 # create cmake toolchain  
+``
 mkdir build  
 cd build  
 cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-arm-none-eabi-8-2019-q3-update.cmake  
-
+``
 # compile firmware  
 make budgetcan_fw  
 
@@ -38,3 +42,4 @@ enter
 
 # After a reboot, the can interface should be ready.  
 sudo reboot.  
+~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
