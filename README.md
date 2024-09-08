@@ -42,4 +42,32 @@ enter
 
 # After a reboot, the can interface should be ready.  
 sudo reboot.  
+## Test thử xem chạy chưa
 ~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
+
+# Cài Phần Firmware cho EBB42
+## Configure Klipper firmware
+Open the config interface of the Klipper firmware with following commands:
+
+cd ~/klipper
+
+make menuconfig
+
+and set the following settings:
+    Enable extra low-level configuration options: check
+    
+    Micro-controller Architecture: STMicroelectronics STM32
+    
+    Processor model: STM32G0B1
+    
+    Bootloader offset: No bootloader (without CanBoot)
+    
+    Bootloader offset: 8KiB bootloader (with CanBoot)
+
+    Clock Reference: 8 MHz crystal
+    
+    Communication interface: CAN bus (on PB0/PB1)
+    
+    CAN bus speed: 500000
+    
+The result should look like this:
