@@ -45,7 +45,8 @@ sudo reboot.
 ## Test thử xem chạy chưa
 ~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
 
-# Cài Phần Firmware cho EBB42
+# Cài Phần Firmware cho EBB42 (tham khảo tại)
+https://docs.meteyou.wtf/btt-ebb/klipper/#flash-klipper-via-usb
 ## Configure Klipper firmware
 Open the config interface of the Klipper firmware with following commands:
 ``
@@ -139,12 +140,20 @@ printer.cfg
 
 canbus_uuid: <uuid>
 
-# embedded temperature sensor
+#embedded temperature sensor
+
 [temperature_sensor EBB]
+
 sensor_type: temperature_mcu
+
 sensor_mcu: EBB
+
 min_temp: 0
+
 max_temp: 100
+
+
+
 If you don't know the UUID of your EBB, you can read it out with the following command:
 
 ``
