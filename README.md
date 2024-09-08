@@ -71,3 +71,6 @@ and set the following settings:
     CAN bus speed: 500000
     
 The result should look like this:
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/klipper-make-menuconfig.png)
+
