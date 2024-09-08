@@ -48,7 +48,7 @@ enter
 # Cài Phần Firmware cho EBB42 (tham khảo tại)
 https://docs.meteyou.wtf/btt-ebb/klipper/#flash-klipper-via-usb
 
-## CANBOOT
+## CANBOOT (Nhớ cho cái jumper vào điện trở 120 Ohm thì CAN mới nhận đc)
 ### Download CanBoot
 Clone the CanBoot repository:
 
