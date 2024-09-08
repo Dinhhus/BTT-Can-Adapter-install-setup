@@ -130,6 +130,21 @@ If your board is in DFU mode, you can flash CanBoot with the following command:
     dfu-util -a 0 -D ~/CanBoot/out/canboot.bin -s 0x08000000:mass-erase:force:leave
 
 ![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/dfu-util_flash_canboot.svg)
+
+Now press the reset button and if the flash process was successfully one LED should blink now.
+
+### Update CanBoot
+If you want to update CanBoot, you have multiple possible ways to do this.
+
+### Update CanBoot via USB
+If you want to update CanBoot via USB, you have to plug in a USB cable and continue with the "old" guide here: Flash CanBoot to the EBB
+
+https://docs.meteyou.wtf/btt-ebb/canboot/#flash-canboot
+
+### Update CanBoot via CAN
+Since the board can only be addressed via CAN, further CanBoot updates must also be flashed to the board via CAN. This is very easy with the CanBoot bootloader:
+
+    python3 ~/CanBoot/scripts/flash_can.py -f ~/CanBoot/out/canboot.bin -i can0 -u <uuid>
 ## Configure Klipper firmware
 Open the config interface of the Klipper firmware with following commands:
 
