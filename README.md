@@ -74,3 +74,51 @@ The result should look like this:
 
 ![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/klipper-make-menuconfig.png)
 
+use q for exit and y for save these settings.
+
+Now clear the cache and compile the Klipper firmware:
+
+
+make clean
+make
+
+## Flash Klipper
+There are two ways to flash the Klipper firmware to the EBB.
+
+Flash the firmware via USB
+Flash the firmware via CAN (recommended) (only with CanBoot)
+### Flash Klipper via USB
+This is the classic way to flash the firmware to the EBB.
+
+Before you start the flashing process, disconnect the heater from the board!
+First, you have to put the board into DFU mode. To do this, press and hold the boot button and then disconnect and reconnect the power supply, or press the reset button on the board. With the command 
+``
+dfu-util -l
+``
+
+, you can check if the board is in DFU mode.
+
+It should then look like this:
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/dfu-util_-l.svg)
+
+If your board is in DFU mode, you can flash Klipper with the following command:
+
+``
+dfu-util -a 0 -D ~/klipper/out/klipper.bin -s 0x08000000:mass-erase:force:leave
+``
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/dfu-util_flash_klipper.svg)
+
+### Flash Klipper via CAN
+This is the recommended way to flash the firmware, when you use CanBoot on your board.
+
+Find the UUID of your board:
+
+``
+python3 ~/CanBoot/scripts/flash_can.py -i can0 -q
+The output should look like this: 
+``
+
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/klipper_query_can.svg)
