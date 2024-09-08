@@ -48,11 +48,11 @@ sudo reboot.
 # Cài Phần Firmware cho EBB42
 ## Configure Klipper firmware
 Open the config interface of the Klipper firmware with following commands:
-
+``
 cd ~/klipper
-
-make menuconfig
-
+``
+`` make menuconfig
+``
 and set the following settings:
     Enable extra low-level configuration options: check
     
@@ -79,8 +79,8 @@ use q for exit and y for save these settings.
 Now clear the cache and compile the Klipper firmware:
 
 
-make clean
-make
+`` make clean ``
+`` make ``
 
 ## Flash Klipper
 There are two ways to flash the Klipper firmware to the EBB.
@@ -120,5 +120,39 @@ python3 ~/CanBoot/scripts/flash_can.py -i can0 -q
 The output should look like this: 
 ``
 
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/klipper_query_can.svg)
+
+With the UUID you have just read, you can now flash the board with:
+
+``
+python3 ~/CanBoot/scripts/flash_can.py -f ~/klipper/out/klipper.bin -i can0 -u <uuid>
+``
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/canboot_flash_klipper.svg)
+
+Add the MCU in Klipper
+Finally, you can add the board to your Klipper printer.cfg with its UUID:
+
+printer.cfg
+
+
+[mcu EBB]
+
+canbus_uuid: <uuid>
+
+# embedded temperature sensor
+[temperature_sensor EBB]
+sensor_type: temperature_mcu
+sensor_mcu: EBB
+min_temp: 0
+max_temp: 100
+If you don't know the UUID of your EBB, you can read it out with the following command:
+
+``
+~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
+``
+
+The output should look like this:
 
 ![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/klipper_query_can.svg)
+
+
