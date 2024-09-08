@@ -1,52 +1,135 @@
 
 # install requirements
 
-sudo apt-get install cmake gcc-arm-none-eabi  
+    sudo apt-get install cmake gcc-arm-none-eabi  
 
 # clone repo  
 
-git clone https://github.com/LeVan102/CandleLight_FW.git  
-cd CandleLight_FW  
+    git clone https://github.com/LeVan102/CandleLight_FW.git  
+    cd CandleLight_FW  
 
 # create cmake toolchain  
-``
-mkdir build  
-cd build  
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-arm-none-eabi-8-2019-q3-update.cmake  
-``
+
+    mkdir build  
+    cd build  
+    cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-arm-none-eabi-8-2019-q3-update.cmake  
+
 # compile firmware  
-make budgetcan_fw  
+    make budgetcan_fw  
 
 # First, the adapter must boot in DFU mode. Please press the boot button and then connect the USB cable  
 
-dfu-util -l  
+    dfu-util -l  
 
 # If the BTT U2C has booted in DFU mode, you can flash it with this command:  
 
-make flash-budgetcan_fw  
+    make flash-budgetcan_fw  
 
 # Now you only have to create the interface in the OS. to do this, create the file   
 
-sudo nano /etc/network/interfaces.d/can0  
+    sudo nano /etc/network/interfaces.d/can0  
 # add   
 # bitrate = bitrate of firmware.  
 
-allow-hotplug can0  
-iface can0 can static  
-    bitrate 500000   
-    up ifconfig $IFACE txqueuelen 128  
+    allow-hotplug can0  
+    iface can0 can static  
+        bitrate 500000   
+        up ifconfig $IFACE txqueuelen 128  
 
 crt x  
 y   
 enter  
 
 # After a reboot, the can interface should be ready.  
-sudo reboot.  
+    sudo reboot.  
 ## Test thử xem chạy chưa
-~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
+    ~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
 
 # Cài Phần Firmware cho EBB42 (tham khảo tại)
 https://docs.meteyou.wtf/btt-ebb/klipper/#flash-klipper-via-usb
+
+## CANBOOT
+### Download CanBoot
+Clone the CanBoot repository:
+
+    cd ~
+    
+    git clone https://github.com/Arksine/CanBoot
+
+To add CanBoot to your moonraker update manager, add this section to your config (optional):
+
+moonraker.conf
+
+    [update_manager canboot]
+    
+    type: git_repo
+    
+    origin: https://github.com/Arksine/CanBoot.git
+    
+    path: ~/CanBoot
+    
+    is_system_service: False
+
+### Configure CanBoot
+Open the config dialog with the following commands
+
+        cd ~/CanBoot
+
+        make menuconfig
+
+and use following config settings:
+
+        Micro-controller Architecture: STMicroelectronics STM32
+        
+        Processor model: STM32G0B1
+        
+        Build CanBoot deployment application: 8KiB bootloader
+        
+        Clock Reference: 8 MHz crystal
+        
+        Communication interface: CAN bus (on PB0/PB1)
+        
+        Application start offset: 8KiB offset
+        
+        CAN bus speed: 500000
+        
+        Support bootloader entry on rapid double click of reset button: check (optional but recommend)
+        
+        Enable Status LED: check
+        
+        Status LED GPIO Pin: PA13
+        
+this should then look like this:
+
+![CanBoot config for EBB devices](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/canboot-make-menuconfig.png)
+
+use q for exit and y for save these settings.
+
+These lines just clear the cache and compile the CanBoot bootloader:
+
+        make clean
+        
+        make
+
+### Flash CanBoot
+
+First, you have to put the board into DFU mode. To do this, press and hold the boot button and then disconnect and reconnect the power supply, or press the reset button on the board. With the command 
+
+    dfu-util -l
+    
+you can check if the board is in DFU mode.
+
+If dfu-util can discover a board in DFU mode it should then look like this:
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/dfu-util_-l.svg)
+
+f this is not the case, repeat the boot/restart process and test it again.
+
+If your board is in DFU mode, you can flash CanBoot with the following command:
+
+    dfu-util -a 0 -D ~/CanBoot/out/canboot.bin -s 0x08000000:mass-erase:force:leave
+
+![alt text](https://github.com/Dinhhus/BTT-Can-Adapter-install-setup/blob/main/dfu-util_flash_canboot.svg)
 ## Configure Klipper firmware
 Open the config interface of the Klipper firmware with following commands:
 
